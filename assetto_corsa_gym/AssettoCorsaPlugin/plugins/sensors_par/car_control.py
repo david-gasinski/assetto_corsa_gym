@@ -1,4 +1,4 @@
-from vjoy import vJoy
+from vjoyLinux import vJoyLinux
 
 from ac_logger import logger
 
@@ -8,7 +8,7 @@ class Controls(object):
     def __init__(self):
         self.onButtons = 0
         #self.vj = vj
-        self.vj = vJoy()
+        self.vj = vJoyLinux()
 
         self.vj.open()
 

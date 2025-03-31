@@ -1,4 +1,4 @@
-from AssettoCorsaEnv.vjoy import vJoy
+from AssettoCorsaEnv.vjoyLinux import vJoyLinux
 
 import logging
 logger = logging.getLogger(__name__)
@@ -9,7 +9,7 @@ class Controls(object):
     def __init__(self):
         self.onButtons = 0
         #self.vj = vj
-        self.vj = vJoy()
+        self.vj = vJoyLinux()
 
         self.vj.open()
 

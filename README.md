@@ -1,3 +1,11 @@
+## MODIFIED FORK FROM [Assetto Corsa Gym]
+
+Features added:
+- Modified to support linux
+- Custom Logging to a postgres database
+- Mobile notifications via pushover 
+- Support for training on procedural environments generated from [Environment Shaping using Assetto Corsa](https://github.com/david-gasinski/dissertation_project)
+
 <h1>Assetto Corsa Gym</span></h1>
 
 Official implementation of the paper:
