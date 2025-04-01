@@ -7,7 +7,7 @@ class vJoyLinux:
         self.device = None
         self.acquired = False
         self.js_path = "/dev/input/js0"
-        self.event_path = "/dev/input/event17"
+        self.event_path = "/dev/input/event16"
         
     def open(self):
         """Open the virtual joystick device"""
