@@ -9,8 +9,8 @@ seed: 0
 enable_notifcaions: true
 
 # wandb
-disable_wandb: True
-wandb_entity: null  # user
+disable_wandb: False
+wandb_entity: dgasinski1-the-university-of-sheffield  # user
 wandb_project: sac
 wandb_silent: False
 exp_name: null

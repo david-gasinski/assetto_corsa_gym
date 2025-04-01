@@ -5,10 +5,15 @@ import mmap
 import numpy as np
 import cv2
 import mss
-import win32gui
 import datetime
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+try:
+    import win32gui
+except Exception as e:
+    logger.error("Error importing screen_capture: %s", e)
+    raise e
 
 IMAGE_SHM_TAG = "Local\\DualBufferImage"
 
