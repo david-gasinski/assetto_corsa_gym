@@ -34,3 +34,5 @@ numba
 pygetwindow
 opencv-python
 mss
+requests
+python-dotenv

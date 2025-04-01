@@ -4,6 +4,8 @@ import argparse
 import logging
 from datetime import datetime
 from pathlib import Path
+from dotenv import load_dotenv
+
 import copy
 from omegaconf import OmegaConf
 import torch
@@ -17,10 +19,13 @@ import AssettoCorsaEnv.data_loader as data_loader
 from discor.algorithm import SAC, DisCor
 from discor.agent import Agent
 import common.misc as misc
+import common.notifcation as notification
 import common.logging_config as logging_config
 from common.logger import Logger
 
 logger = logging.getLogger(__name__)
+
+load_dotenv()
 
 def parse_args(hardcode=None):
     parser = argparse.ArgumentParser(description="Description of your program.")
@@ -57,7 +62,13 @@ def main():
 
     logging_config.create_logging(level=logging.DEBUG, file_name=work_dir + "log.log")
     logging.getLogger().setLevel(logging.INFO)
-
+    
+    # enable notifications
+    if config.enable_notifications:
+        notification_client = notification.NotifcationClient(
+            os.getenv("PUSHOVER_APP_KEY"), os.getenv("PUSHOVER_USER_KEY")
+        )
+        
     # log system and git info
     misc.get_system_info()
     misc.get_git_commit_info()
@@ -134,12 +145,24 @@ def main():
         agent.load(args.load_path, load_buffer=load_buffer)
 
     if args.test:
+        if config.enable_notifications:
+            notification_client.send_notifcation("Starting agent evaluation...", "AGENT EVAL")
+        
         agent._env.set_eval_mode()
         agent.evaluate()
         logger.info("done evaluation")
+        
+        if config.enable_notifications: 
+            notification_client.send_notifcation("Completed evaluation.", "AGENT EVAL")
     else:
+        if config.enable_notifications: 
+            notification_client.send_notifcation("Starting agent training...", "AGENT TRAINING")
+        
         agent.run()
         logger.info("done training")
+        
+        if config.enable_notifications: 
+            notification_client.send_notifcation("Completed training.", "AGENT TRAINING")
 
 if __name__ == "__main__":
     main()

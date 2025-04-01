@@ -5,6 +5,9 @@ work_dir: null              # Path to run the model from (default: None)
 task: AssettoCorsaEnv
 seed: 0
 
+# notifcations
+enable_notifcaions: true
+
 # wandb
 disable_wandb: True
 wandb_entity: null  # user
