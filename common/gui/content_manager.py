@@ -17,7 +17,7 @@ class ContentManagerGUI():
     # GUI RELATIVE POSITIONS 
     # RATIO OF POS / SIZE
     DRIVE = (0.9758, 0.9757)
-    TRACK_CHANGE = (0.1044, 0.1208)
+    TRACK_CHANGE = (0.1644, 0.1208)
     TRACK_FILTER = (0.3195, 0.0736)
     SELECT_FIRST_TRACK = (0.2957, 0.0972)
     TRACK_CONFIRM = (0.3488, 0.4092)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     gui.launch_ac()
     time.sleep(10)
     gui.start_game()
-    time.sleep(10)
+    time.sleep(5)
     
     gui.close_ac()
     
