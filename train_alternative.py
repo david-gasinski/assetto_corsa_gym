@@ -142,13 +142,11 @@ def main():
         # update the current config to reflect first training cycle
         config.AssettoCorsa.track = track.track
         
-        # initialise the environment
-        env = assettoCorsa.make_ac_env(cfg=config, work_dir=work_dir)
-        # update the agents environment
-        agent.change_environment(env)
         
         # change the track in assetto corsa
         gui.change_track(track.ac_track)
+        
+        time.sleep(2) # small delay incase of lag
         
         # start assetto corsa
         gui.launch_ac()
@@ -160,8 +158,15 @@ def main():
         gui.start_game()
         time.sleep(5)    
         
+        # initialise the environment
+        env = assettoCorsa.make_ac_env(cfg=config, work_dir=work_dir)
+        # update the agents environment
+        agent.change_environment(env)
+
+        time.sleep(1)     
+      
         # start training
-        agent.run_without_save() # change
+        agent.run_without_save(track.steps) 
         
         if config.enable_notifications:
             notification_client.send_notifcation(f"Training complete on {track.track}.")
@@ -171,6 +176,9 @@ def main():
     
     # once all tracks have been run, save the model
     agent.save_final()
+    if config.enable_notifications:
+        notification_client.send_notifcation(f"Training complete.")
+            
     
         
 if __name__ == "__main__":

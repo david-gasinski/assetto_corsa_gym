@@ -101,6 +101,8 @@ if __name__ == '__main__':
     # select barcelone
     gui = ContentManagerGUI()
     
+    
+    time.sleep(5)
     gui.change_track("barcelona")
     
     gui.launch_ac()
