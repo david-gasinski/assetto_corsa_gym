@@ -100,6 +100,10 @@ class Agent:
             self._steps = self._replay_buffer._n
             logger.info(f"loaded buffer from {path}. Number of steps: {len(self._replay_buffer)}")
 
+    def change_environment(self, env) -> None:
+        self._env = env
+        logger.info("Updated environment")
+
     def run(self):
         try:
             while True:
