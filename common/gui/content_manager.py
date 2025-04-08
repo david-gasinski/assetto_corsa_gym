@@ -67,6 +67,10 @@ class ContentManagerGUI():
         self._print(track)
         time.sleep(self.DEFAULT_INTERVAL)
 
+        # select track
+        self._click_pos(self.SELECT_FIRST_TRACK)
+        time.sleep(self.DEFAULT_INTERVAL)
+
         # submit
         self._click_pos(self.TRACK_CONFIRM)
         time.sleep(self.DEFAULT_INTERVAL)
