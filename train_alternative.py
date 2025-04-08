@@ -52,6 +52,11 @@ def parse_args(hardcode=None):
     return args
 
 def main():
+    """
+        Currently no support for pre training
+        This is for testing purposes, will be updated at a later date
+    """
+    
     args = parse_args()
     
     config = OmegaConf.load(args.config)
