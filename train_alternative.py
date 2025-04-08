@@ -142,7 +142,6 @@ def main():
         # update the current config to reflect first training cycle
         config.AssettoCorsa.track = track.track
         
-        
         # change the track in assetto corsa
         gui.change_track(track.ac_track)
         
@@ -153,7 +152,7 @@ def main():
         time.sleep(10) # wait until the game loads
         
         if config.enable_notifications:
-            notification_client.send_notifcation(f"Loaded track {track.track}. Starting training...")
+            notification_client.send_notifcation(f"Loaded track {track.track}. Starting training...", "AGENT TRAINING")
         
         gui.start_game()
         time.sleep(5)    
@@ -163,13 +162,13 @@ def main():
         # update the agents environment
         agent.change_environment(env)
 
-        time.sleep(1)     
+        time.sleep(2)     
       
         # start training
         agent.run_without_save(track.steps) 
         
         if config.enable_notifications:
-            notification_client.send_notifcation(f"Training complete on {track.track}.")
+            notification_client.send_notifcation(f"Training complete on {track.track}.", "AGENT TRAINING")
             
         gui.close_ac() 
         time.sleep(5) # wait for all operations to complete       
@@ -177,7 +176,7 @@ def main():
     # once all tracks have been run, save the model
     agent.save_final()
     if config.enable_notifications:
-        notification_client.send_notifcation(f"Training complete.")
+        notification_client.send_notifcation(f"Training complete.", "AGENT TRAINING")
             
     
         
