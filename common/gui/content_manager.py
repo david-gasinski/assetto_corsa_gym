@@ -97,6 +97,17 @@ class ContentManagerGUI():
         pyautogui.press('escape') # closes the menu that appears in CM after AC is closed
         
         
-        
+if __name__ == '__main__':
+    # select barcelone
+    gui = ContentManagerGUI()
+    
+    gui.change_track("barcelona")
+    
+    gui.launch_ac()
+    time.sleep(10)
+    gui.start_game()
+    time.sleep(10)
+    
+    gui.close_ac()
     
             

@@ -116,6 +116,15 @@ class Agent:
         finally:
             self.save(os.path.join(self._model_dir, 'final'), save_buffer=True)
 
+    def run_without_save(self, num_step: int):
+        while True:
+            self.train_episode()
+            if self._steps > num_step:
+                break
+            
+    def save_final(self):
+        self.save(os.path.join(self._model_dir, 'final'), save_buffer=True)
+
     def update_model(self):
         train_stats = None
         # Update online networks.

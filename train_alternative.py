@@ -55,6 +55,9 @@ def main():
     """
         Currently no support for pre training
         This is for testing purposes, will be updated at a later date
+        
+        To ensure the switching works properly, the current track selected in AC must match 
+        the track in config.yml (NOT train-config.yml)
     """
     
     args = parse_args()
@@ -135,13 +138,6 @@ def main():
     if config.enable_notifications: 
             notification_client.send_notifcation("Starting agent training...", "AGENT TRAINING")
         
-    # essentially
-    # load config
-    # for each track in config
-    # create an env
-    # run the algorithm until steps in config is reached
-    # change track
-    # run again
     for track in train_conf.train_config:
         # update the current config to reflect first training cycle
         config.AssettoCorsa.track = track.track
@@ -155,25 +151,33 @@ def main():
         gui.change_track(track.ac_track)
         
         # start assetto corsa
-        gui.start_game()
+        gui.launch_ac()
         time.sleep(10) # wait until the game loads
         
         if config.enable_notifications:
             notification_client.send_notifcation(f"Loaded track {track.track}. Starting training...")
         
+        gui.start_game()
+        time.sleep(5)    
+        
         # start training
-        agent.run() # change
+        agent.run_without_save() # change
         
         if config.enable_notifications:
             notification_client.send_notifcation(f"Training complete on {track.track}.")
             
-        gui.close_ac()        
+        gui.close_ac() 
+        time.sleep(5) # wait for all operations to complete       
+    
+    # once all tracks have been run, save the model
+    agent.save_final()
+    
+        
+if __name__ == "__main__":
+    main()        
         
         
-        
-        
-        
-        
+
         
         
      
