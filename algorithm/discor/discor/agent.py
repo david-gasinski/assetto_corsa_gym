@@ -53,6 +53,7 @@ class Agent:
 
         self.episodes_stats = []
         self._steps = 0
+        self._env_steps = 0 # steps taken in the current environment
         self._episodes = 0
         self._train_return = RunningMeanStats(log_interval)
         self._writer = SummaryWriter(log_dir=self._summary_dir)
@@ -102,6 +103,7 @@ class Agent:
 
     def change_environment(self, env) -> None:
         self._env = env
+        self._env_steps = 0 # reset the number of steps taken in the environment
         logger.info("Updated environment")
 
     def run(self):
@@ -119,7 +121,7 @@ class Agent:
     def run_without_save(self, num_step: int):
         while True:
             self.train_episode()
-            if self._steps > num_step:
+            if self._env_steps > num_step:
                 break
             
     def save_final(self):
@@ -193,6 +195,7 @@ class Agent:
                     episode_done=rb_done)
 
                 self._steps += 1
+                self._env_steps += 1
                 episode_steps += 1
                 episode_return += reward
                 state = next_state
