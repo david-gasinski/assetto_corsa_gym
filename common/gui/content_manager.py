@@ -95,7 +95,7 @@ class ContentManagerGUI():
         """
         time.sleep(self.DEFAULT_INTERVAL)
         pyautogui.press('escape')
-        time.sleep(self.DEFAULT_INTERVAL)
+        time.sleep(self.DEFAULT_INTERVAL + 5) # turns out the bug was here not below
         self._click_pos(self.CLOSE_AC)
         time.sleep(self.DEFAULT_INTERVAL + 5) # slightly longer interval due to linux being linux
         pyautogui.press('escape') # closes the menu that appears in CM after AC is closed
