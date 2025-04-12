@@ -12,7 +12,7 @@ class ContentManagerGUI():
         Also, in CM under Appearance -> Interface, check the option "Do not interfere with windows location and size"
     """
     
-    DEFAULT_INTERVAL = 0.5 # interval to wait between operations
+    DEFAULT_INTERVAL = 1 # interval to wait between operations
     
     # GUI RELATIVE POSITIONS 
     # RATIO OF POS / SIZE
