@@ -5,7 +5,6 @@ import logging
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-import shlex
 
 import copy
 from omegaconf import OmegaConf
@@ -27,18 +26,15 @@ from common.logger import Logger
 
 import time
 
-
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-
-def launch_ac():
-    subprocess.Popen()
 
 def parse_args(hardcode=None):
     parser = argparse.ArgumentParser(description="Description of your program.")
     parser.add_argument("--config", default="config.yml", type=str, help="Path to configuration file")
     parser.add_argument("--load_path", type=str, default=None, help="Path to load the model from (default: None)")
+    parser.add_argument("--resume", type=bool, default=False, help="If preloading a dataset, resume training based on the number of steps already done.")
     parser.add_argument("--algo", type=str, default="sac", help="Algorithm type (default: sac)")
     parser.add_argument("--test", action="store_true")
     parser.add_argument("overrides", nargs=argparse.REMAINDER, help="Any key=value arguments to override config values")
@@ -100,10 +96,11 @@ def main():
     # load training config
     train_conf = OmegaConf.load(args.train_config)
     
-     # Device to use
+    # Device to use
     device = torch.device("cuda")
     assert device.type == "cuda", "Only cuda is supported"
     
+    # create the environment
     env = assettoCorsa.make_ac_env(cfg=config, work_dir=work_dir)
 
     if args.algo == 'discor':
@@ -135,9 +132,41 @@ def main():
     agent = Agent(env=env, test_env=env, algo=algo, log_dir=config.work_dir,
                   device=device, seed=config.seed, **config.Agent, wandb_logger=wandb_logger)
     
+    # pre training
+    if not args.test and config.load_offline_data:
+        data_config_file = os.path.abspath(r"./ac_offline_train_paths.yml")
+        logger.info("Loading offline dataset...")
+        assert config.dataset_path, "dataset_path not set in config"
+        dataset_path = Path(config.dataset_path + os.sep)
+
+        # load data set
+        data = data_loader.read_yml(data_config_file)
+
+        for track in data:
+            for car in data[track]:
+                paths = data[track][car]
+                paths = [dataset_path / Path(f"{track}/{car}") / p["id"] / "laps" for p in paths]
+                env_load_config = copy.deepcopy(config)
+                env_load_config.AssettoCorsa.track = track
+                env_load_config.AssettoCorsa.car = car
+                env_load = assettoCorsa.make_ac_env(cfg=env_load_config, work_dir=work_dir)
+                for laps_path in paths:
+                    assert laps_path.exists(), f"{laps_path} not found"
+                    agent.load_pre_train_data(laps_path.as_posix(), env_load)
+
+        if config.Agent.use_offline_buffer:
+            agent._replay_buffer.online(True)
+    
+    if config.pre_train:
+        agent.pre_train()
+
+    if args.load_path is not None:
+        load_buffer = False if args.test else True
+        agent.load(args.load_path, load_buffer=load_buffer)
+                
     if config.enable_notifications: 
             notification_client.send_notifcation("Starting agent training...", "AGENT TRAINING")
-        
+                            
     for track in train_conf.train_config:
         # update the current config to reflect first training cycle
         config.AssettoCorsa.track = track.track

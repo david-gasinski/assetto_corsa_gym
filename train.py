@@ -145,6 +145,7 @@ def main():
         agent.load(args.load_path, load_buffer=load_buffer)
 
     if args.test:
+        print(agent._steps)
         if config.enable_notifications:
             notification_client.send_notifcation("Starting agent evaluation...", "AGENT EVAL")
         

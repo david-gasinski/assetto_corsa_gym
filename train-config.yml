@@ -2,18 +2,22 @@ train_config:
   - 
     track: "ks_barcelona-layout_gp"
     ac_track: "barcelona"
-    steps: 2500000
+    env_steps: 2500000
+    total_steps: 2500000
   - 
     track: "monza"
     ac_track: "monza"
-    steps: 2500000
+    env_steps: 2500000
+    total_steps: 5000000
   - 
     track: "ks_red_bull_ring-layout_gp"
     ac_track: "red bull ring"
-    steps: 2500000
+    env_steps: 2500000
+    total_steps: 7500000
   - 
     track: "ks_silverstone-gp"
     ac_track: "silverstone"
-    steps: 2500000
+    env_steps: 2500000
+    total_steps: 10000000
 
   
