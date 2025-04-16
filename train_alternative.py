@@ -165,8 +165,15 @@ def main():
 
     # load an agent
     if args.load_path is not None:
-        load_buffer = False if args.test else True
-        agent.load(args.load_path, load_buffer=load_buffer)
+        """
+            TO DO
+            
+            Make checkpoints save replay buffers so you can resume from when you started
+            for now the either 
+                1) loads the model and restarts the training from fresh
+                2) if --resume=<track> is passed, the model will start training from said track
+        """
+        agent.load(args.load_path, load_buffer=False)
         
         if args.resume:
             # check if track is within train-config
@@ -226,7 +233,7 @@ def main():
             
         gui.close_ac() 
         time.sleep(5) # wait for all operations to complete       
-    
+            
     # once all tracks have been run, save the model
     agent.save_final()
     if config.enable_notifications:

@@ -106,7 +106,7 @@ class Agent:
         self._env_steps = 0 # reset the number of steps taken in the environment
         logger.info("Updated environment")
         
-    def updaet_steps(self, num_steps) -> None:
+    def update_steps(self, num_steps) -> None:
         self._num_steps = num_steps
         logger.info(f"Updated steps to {num_steps}")
 
