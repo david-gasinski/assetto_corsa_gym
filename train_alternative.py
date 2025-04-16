@@ -34,7 +34,7 @@ def parse_args(hardcode=None):
     parser = argparse.ArgumentParser(description="Description of your program.")
     parser.add_argument("--config", default="config.yml", type=str, help="Path to configuration file")
     parser.add_argument("--load_path", type=str, default=None, help="Path to load the model from (default: None)")
-    parser.add_argument("--resume", type=bool, default=False, help="If preloading a dataset, resume training based on the number of steps already done.")
+    parser.add_argument("--resume", type=str, default=False, help="If preloading a dataset, resume training on a specific track.")
     parser.add_argument("--algo", type=str, default="sac", help="Algorithm type (default: sac)")
     parser.add_argument("--test", action="store_true")
     parser.add_argument("overrides", nargs=argparse.REMAINDER, help="Any key=value arguments to override config values")
@@ -132,7 +132,10 @@ def main():
     agent = Agent(env=env, test_env=env, algo=algo, log_dir=config.work_dir,
                   device=device, seed=config.seed, **config.Agent, wandb_logger=wandb_logger)
     
-    # pre training
+    # configure the training config
+    # initialise here to make changes if args.resume option 
+    training_config = train_conf.train_config
+    
     if not args.test and config.load_offline_data:
         data_config_file = os.path.abspath(r"./ac_offline_train_paths.yml")
         logger.info("Loading offline dataset...")
@@ -160,14 +163,36 @@ def main():
     if config.pre_train:
         agent.pre_train()
 
+    # load an agent
     if args.load_path is not None:
         load_buffer = False if args.test else True
         agent.load(args.load_path, load_buffer=load_buffer)
-                
+        
+        if args.resume:
+            # check if track is within train-config
+                        
+            for track in training_config:
+                track_exists = track.track == args.resume
+
+                if track_exists:
+                    logger.info(f"Resuming training on track {args.resume}")
+                    # modify training config 
+                    # to only include tracks that havent resumed
+                    idx = training_config.index(track)
+                    training_config = training_config[idx:]
+                    
+                    # update the number of steps when resuming
+                    steps = sum([track.steps for track in training_config])
+                    agent.update_steps(steps)
+                    break # exit the loop as track found
+                    
+            if not track_exists:
+                logger.info(f"Track {args.resume} does not exist within the training config. Resuming training on default track")
+
     if config.enable_notifications: 
             notification_client.send_notifcation("Starting agent training...", "AGENT TRAINING")
                             
-    for track in train_conf.train_config:
+    for track in training_config:
         # update the current config to reflect first training cycle
         config.AssettoCorsa.track = track.track
         
