@@ -37,3 +37,11 @@ indianapolis_sp:
   track_grid_file: indianapolis_sp_0.1m.pkl
   ref_lap_file: indianapolis_sp-racing_line.csv
   TrackLength: 4066.004150390625
+
+ks_zandvoort:
+  track_name: ks_zandvoort
+  track_configuration:
+  track_file: ks_zandvoort.csv
+  track_grid_file: ks_zandvoort_0.1m.pkl
+  ref_lap_file: ks_zandvoort-racing_line.csv
+  TrackLength: 4189.69091796875
