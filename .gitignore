@@ -63,3 +63,5 @@ assetto_corsa_gym.code-workspace
 
 # api keys
 .env
+
+venv
