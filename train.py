@@ -142,7 +142,7 @@ def main():
 
     if args.load_path is not None:
         load_buffer = False if args.test else True
-        agent.load(args.load_path, load_buffer=load_buffer)
+        agent.load(args.load_path, load_buffer=False)
 
     if args.test:
         print(agent._steps)
